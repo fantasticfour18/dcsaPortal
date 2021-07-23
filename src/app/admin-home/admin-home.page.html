@@ -1,0 +1,64 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Home</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <br>
+  <form [formGroup]="form">
+    <ion-list>
+      <ion-list-header>
+        <ion-label color="primary">Promote Students</ion-label>
+      </ion-list-header>
+      <ion-item>
+        <ion-label>Class</ion-label>
+        <ion-select placeholder="Select" formControlName="clss">
+          <ion-select-option *ngFor="let opt of clss" value={{opt}}>{{opt}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label>From Semester</ion-label>
+        <ion-select placeholder="Select" formControlName="fromSem">
+          <ion-select-option *ngFor="let sem of sems; index as i" value={{i+1}}>{{sem}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label>To Semester</ion-label>
+        <ion-select placeholder="Select" formControlName="toSem">
+          <ion-select-option *ngFor="let sem of sems; index as i" value={{i+1}}>{{sem}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <br>
+      <div class="ion-text-center">
+        <ion-button (click)="createAlert(1)" expand="block" color="danger" fill="outline" shape="round"
+        [disabled]="!form.get('clss').valid || !form.get('fromSem').valid || !form.get('toSem').valid">Promote</ion-button>
+      </div>
+
+      <br><br>
+      <ion-list-header>
+        <ion-label color="primary">Manage Attendance Records</ion-label>
+      </ion-list-header>
+      <ion-item>
+        <ion-label>Class</ion-label>
+        <ion-select placeholder="Select" formControlName="clss2">
+          <ion-select-option *ngFor="let opt of clss" value={{opt}}>{{opt}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label>Previous Semester</ion-label>
+        <ion-select placeholder="Select" formControlName="sem">
+          <ion-select-option *ngFor="let sem of sems; index as i" value={{i+1}}>{{sem}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <br>
+      <div class="ion-text-center">
+        <ion-button (click)="createAlert(2)" expand="block" color="danger" fill="outline" shape="round"
+        [disabled]="!form.get('clss2').valid || !form.get('sem').valid">Delete Attendance Records</ion-button>
+      </div>
+    </ion-list>
+  </form>
+</ion-content>

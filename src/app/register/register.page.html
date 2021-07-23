@@ -1,0 +1,469 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="login" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-title>Registration</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col size-md="6" offset-md="3" class="ion-text-center">
+
+        <ion-badge color="{{badgeClr[0]}}">
+          <ion-icon color="{{iconColor[0]}}" name="lock-closed" class="ion-margin-top steps"></ion-icon>
+          <p>Account</p>
+        </ion-badge>
+        <span class="{{lines[0]}}"></span>
+
+        <ion-badge color="{{badgeClr[1]}}">
+          <ion-icon color="{{iconColor[1]}}" name="person" class="ion-margin-top steps"></ion-icon>
+          <p>Personal</p>
+        </ion-badge>
+        <span class="{{lines[1]}}"></span>
+
+        <ion-badge color="{{badgeClr[2]}}">
+          <ion-icon color="{{iconColor[2]}}" name="book" class="ion-margin-top steps"></ion-icon>
+          <p>Education</p>
+        </ion-badge>
+        <span class="{{lines[2]}}"></span>
+        
+        <ion-badge color="{{badgeClr[3]}}">
+          <ion-icon color="{{iconColor[3]}}" name="briefcase" class="ion-margin-top steps"></ion-icon>
+          <p>Work</p>
+        </ion-badge>
+        
+      </ion-col>
+    </ion-row>
+  </ion-grid>  
+   
+  <ion-grid>
+    <ion-row>
+      <ion-col size-md="6" offset-md="3">
+        <ion-card>
+
+        <ion-card-content>
+        <div [ngSwitch]="step">
+        <form [formGroup]="formData1">
+          <div class="card-animate" *ngSwitchCase="1">
+            <ion-item class="title" color="tertiary">
+              <span class="title-content">Account Info</span> <span class="title-step" slot="end">{{step_disp}}</span>
+            </ion-item>
+
+            <ion-item>
+              <ion-label>User Type</ion-label>
+              <ion-select placeholder="Select" formControlName="utype">
+                <ion-select-option value="Student">Student</ion-select-option>
+                <ion-select-option value="Teaching-Staff">Teaching Staff</ion-select-option>
+                <ion-select-option value="Non-Teaching-Staff">Non-Teaching Staff</ion-select-option>
+                <ion-select-option value="Chairperson">Chairperson</ion-select-option>
+              </ion-select>
+            </ion-item>
+
+            <ion-item *ngIf="formData1.get('utype').value == 'Student'">
+              <ion-label>Class</ion-label>
+              <ion-select selected="MCA" placeholder="Select" formControlName="clss">
+                <ion-select-option value="MCA">M.C.A</ion-select-option>
+                <ion-select-option value="MSc">M.Sc</ion-select-option>
+              </ion-select>
+            </ion-item>
+
+            <ion-item *ngIf="formData1.get('utype').value == 'Student'">
+              <ion-label>Semester</ion-label>
+              <ion-select selected="1" placeholder="Select" formControlName="semester">
+                <ion-select-option value="1">I</ion-select-option>
+                <ion-select-option value="2">II</ion-select-option>
+                <ion-select-option value="3">III</ion-select-option>
+                <ion-select-option value="4">IV</ion-select-option>
+                <ion-select-option value="5">V</ion-select-option>
+              </ion-select>
+            </ion-item>
+
+            <ion-item *ngIf="formData1.get('utype').value == 'Student'">
+              <ion-label>Shift</ion-label>
+              <ion-select selected="Morning" placeholder="Select" formControlName="shift">
+                <ion-select-option value="Morning">Morning</ion-select-option>
+                <ion-select-option value="Evening">Evening</ion-select-option>
+              </ion-select>
+            </ion-item>
+
+            <ion-item>
+              <ion-label position="floating">Username</ion-label>
+              <ion-input type="text" formControlName="uname"></ion-input>
+            </ion-item>
+            <ion-item *ngIf="formData1.get('uname').touched && !formData1.get('uname').valid" lines="none">
+              <ion-label color="danger" class="ion-text-wrap">Username should be minimum 6 chars.</ion-label>
+            </ion-item>
+
+            <ion-item>
+              <ion-label position="floating">Password</ion-label>
+              <ion-input type="password" formControlName="pass"></ion-input>
+            </ion-item>
+            <ion-item *ngIf="formData1.get('pass').touched && !formData1.get('pass').valid" lines="none">
+              <ion-label color="danger" class="ion-text-wrap">Password should be minimum 8 chars. and should contain 
+                atleast 1 UpperCase, 1 LowerCase, 1 digit and 1 special character(s) .</ion-label>
+            </ion-item>
+
+            <ion-item>
+              <ion-label position="floating">Confirm Password</ion-label>
+              <ion-input type="password" formControlName="cnfmPass"></ion-input>
+            </ion-item>
+            <ion-item *ngIf="formData1.get('cnfmPass').touched && formData1.get('cnfmPass').errors?.PassMatch" lines="none">
+              <ion-label color="danger" class="ion-text-wrap">Passwords do not match.</ion-label>
+            </ion-item>
+
+            <div class="ion-margin-vertical ion-text-center">
+              <ion-button color="primary" (click)="nextStep(2,'next')" 
+              [disabled]="!formData1.get('utype').valid || !formData1.get('uname').valid || !formData1.get('pass').valid 
+              || !formData1.get('cnfmPass').valid">
+                NEXT<ion-icon name="arrow-forward-outline" slot="end"></ion-icon></ion-button>
+            </div>
+        </div>
+        </form>
+        
+
+        <!--Personal Information-->
+        <ion-grid>
+          <form [formGroup]="formData2">
+          <div class="card-animate" *ngSwitchCase="2">
+            <ion-row>
+              <ion-col>
+                <ion-item class="title" color="tertiary">
+                  <span class="title-content">Personal Info</span> <span class="title-step" slot="end">{{step_disp}}</span>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+
+            <ion-row>
+              <ion-col size="6">
+                <ion-item>
+                  <ion-label position="floating">First Name</ion-label>
+                  <ion-input type="text" formControlName="fname"></ion-input>
+                </ion-item>
+              </ion-col>
+
+              <ion-col size="6">
+                <ion-item>
+                  <ion-label position="floating">Last Name</ion-label>
+                  <ion-input type="text" formControlName="lname"></ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            <ion-row *ngIf="(formData2.get('fname').touched || formData2.get('lname').touched) 
+            && (!formData2.get('fname').valid || !formData2.get('lname').valid)">
+              <ion-col size="12">
+                <ion-item lines="none">
+                  <ion-label color="danger" class="ion-text-nowrap">Enter valid name.</ion-label>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+
+            <ion-row>
+              <ion-col>
+                <ion-item>
+                  <ion-label position="floating">Father's Name</ion-label>
+                  <ion-input type="text" formControlName="fathname"></ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            <ion-row *ngIf="formData2.get('fathname').touched && !formData2.get('fathname').valid">
+              <ion-col size="12">
+                <ion-item lines="none">
+                  <ion-label color="danger" class="ion-text-nowrap">Enter valid father's name.</ion-label>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+
+            <ion-row>
+              <ion-col>
+                <ion-item>
+                  <ion-label position="floating">Mother's Name</ion-label>
+                  <ion-input type="text" formControlName="mothname"></ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            <ion-row *ngIf="formData2.get('mothname').touched && !formData2.get('mothname').valid">
+              <ion-col size="12">
+                <ion-item lines="none">
+                  <ion-label color="danger" class="ion-text-nowrap">Enter valid mother's name.</ion-label>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+
+            <ion-row>
+              <ion-col>
+                  <ion-item>
+                    <ion-label>D.O.B</ion-label>
+                    <ion-datetime displayFormat="DD MMMM YYYY" placeholder="Select" formControlName="dob"></ion-datetime>
+                  </ion-item>
+              </ion-col>
+            </ion-row>
+
+            <ion-row>
+              <ion-col>
+                <ion-item>
+                  <ion-label>Gender</ion-label>
+                  <ion-select placeholder="Select" formControlName="gender">
+                    <ion-select-option value="Male">Male</ion-select-option>
+                    <ion-select-option value="Female">Female</ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+
+            <ion-row>
+              <ion-col>
+                <ion-item class="ion-margin-top title" color="tertiary">
+                  <span class="title-content">Contact Info</span>
+                </ion-item>           
+              </ion-col>
+            </ion-row>
+
+            <ion-row>
+              <ion-col>
+                <ion-item>
+                  <ion-label position="floating">Address</ion-label>
+                  <ion-input type="text" formControlName="address"></ion-input>
+                </ion-item>
+                <ion-item *ngIf="formData2.get('address').touched && !formData2.get('address').valid" lines="none">
+                  <ion-label color="danger" class="ion-text-wrap">Required.</ion-label>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+
+            <ion-row>
+              <ion-col size="6">
+                <ion-item>
+                  <ion-label position="floating">City</ion-label>
+                  <ion-input type="text" formControlName="city"></ion-input>
+                </ion-item>
+                <ion-item *ngIf="formData2.get('city').touched && !formData2.get('city').valid" lines="none">
+                  <ion-label color="danger" class="ion-text-wrap">Enter valid city.</ion-label>
+                </ion-item>
+              </ion-col>
+
+              <ion-col size="6">
+                <ion-item>
+                  <ion-label position="floating">State</ion-label>
+                  <ion-input type="text" formControlName="state"></ion-input>
+                </ion-item>
+                <ion-item *ngIf="formData2.get('state').touched && !formData2.get('state').valid" lines="none">
+                  <ion-label color="danger" class="ion-text-wrap">Enter valid state.</ion-label>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+
+            <ion-row>
+              <ion-col size="6">
+                <ion-item>
+                  <ion-label position="floating">Zip Code</ion-label>
+                  <ion-input type="number" formControlName="zipcode" (keyup)="limitNumber(formData2.value, 'zip')"></ion-input>
+                </ion-item>
+                <ion-item *ngIf="formData2.get('zipcode').touched && !formData2.get('zipcode').valid" lines="none">
+                  <ion-label color="danger" class="ion-text-wrap">Enter valid zipcode.</ion-label>
+                </ion-item>
+              </ion-col>
+
+              <ion-col size="6">
+                <ion-item>
+                  <ion-label position="floating">Country</ion-label>
+                  <ion-input type="text" formControlName="country"></ion-input>
+                </ion-item>
+                <ion-item *ngIf="formData2.get('country').touched && !formData2.get('country').valid" lines="none">
+                  <ion-label color="danger" class="ion-text-wrap">Enter valid country.</ion-label>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+
+            <ion-row>
+              <ion-col>
+                <ion-item>
+                  <ion-label position="floating">Phone</ion-label>
+                  <ion-input type="number" formControlName="phone" (keyup)="limitNumber(formData2.value, 'phone')"></ion-input>
+                </ion-item>
+                <ion-item *ngIf="formData2.get('phone').touched && !formData2.get('phone').valid" lines="none">
+                  <ion-label color="danger">Enter valid phone number.</ion-label>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+
+            <ion-row>
+              <ion-col>
+                <ion-item>
+                  <ion-label position="floating">Email</ion-label>
+                  <ion-input type="email" formControlName="email"></ion-input>
+                </ion-item>
+                <ion-item *ngIf="formData2.get('email').touched && !formData2.get('email').valid" lines="none">
+                  <ion-label color="danger">Enter valid email address.</ion-label>
+                </ion-item>
+                <ion-item lines="none">
+                  <ion-label color="warning" class="ion-text-wrap">Note: Email must be valid. You will be asked for Verification later.</ion-label>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+         
+            <div class="ion-margin-vertical ion-text-center">
+              <ion-button color="danger" (click)="nextStep(1, 'back')" class="ion-margin-end">BACK<ion-icon name="arrow-back-outline" slot="start"></ion-icon></ion-button>
+              <ion-button color="primary" (click)="nextStep(3, 'next')" class="ion-margin-start" [disabled]="!formData2.valid">
+                NEXT<ion-icon name="arrow-forward-outline" slot="end"></ion-icon></ion-button>
+            </div>
+          </div>
+          </form>
+
+          <!--Education Qualification-->
+          <div class="card-animate" *ngSwitchCase="3">
+            <ion-row>
+              <ion-col>
+                <ion-item class="title" color="tertiary">
+                  <span class="title-content">Education Info</span> <span class="title-step" slot="end">{{step_disp}}</span>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+
+            <div *ngFor="let edu of eduData; index as i">
+              <ion-row>
+                <ion-col>
+                  <ion-item style="--background: lightgrey;">
+                    <ion-label>{{edu.qual}}</ion-label>
+                    <ion-buttons slot="end">
+                      <ion-button fill="clear" color="danger" (click)="createAlert(edu.qual, i, 1)">
+                        <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+                      </ion-button>
+                    </ion-buttons>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+              
+              <ion-row>
+                <ion-col size="6">
+                  <ion-item>
+                    <ion-label position="floating">Year</ion-label>
+                    <ion-input type="text" value="{{edu.year}}" readonly></ion-input>
+                  </ion-item>    
+                </ion-col>
+
+                <ion-col size="6">
+                  <ion-item>
+                    <ion-label position="floating">Marks</ion-label>
+                    <ion-input type="text" value="{{edu.marks}}" readonly></ion-input>
+                  </ion-item>    
+                </ion-col>
+              </ion-row>
+
+              <ion-row>
+                <ion-col>
+                  <ion-item>
+                    <ion-label position="floating">Subjects / Specialization</ion-label>
+                    <ion-input type="text" value="{{edu.sub}}" readonly></ion-input>
+                  </ion-item>    
+                </ion-col>
+              </ion-row>
+            
+              <ion-row>
+                <ion-col>
+                  <ion-item>
+                    <ion-label position="floating">School / College</ion-label>
+                    <ion-input type="text" value="{{edu.schl}}" readonly></ion-input>
+                  </ion-item>    
+                </ion-col>
+              </ion-row>
+            </div>
+
+            <div class="ion-text-center">
+              <br><br>
+              <ion-button (click)="createModal(3)" fill="outline" class="ion-margin-vertical">
+                <ion-icon slot="end" name="add"></ion-icon>Add
+              </ion-button>
+              <br><br>
+            </div>
+
+            <div class="ion-margin-vertical ion-text-center">
+              <ion-button color="danger" (click)="nextStep(2, 'back')" class="ion-margin-end">BACK<ion-icon name="arrow-back-outline" slot="start"></ion-icon></ion-button>
+              <ion-button color="primary" (click)="nextStep(4,'next')" class="ion-margin-start">NEXT<ion-icon name="arrow-forward-outline" slot="end"></ion-icon></ion-button>
+              <p><br>You can add or update later.</p>
+            </div>
+          </div>
+            
+          <!--Work Experience-->
+          <div class="card-animate" *ngSwitchCase="4">
+            <ion-row>
+              <ion-col>
+                <ion-item class="title" color="tertiary">
+                  <span class="title-content">Work Experience</span> <span class="title-step" slot="end">{{step_disp}}</span>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+
+            <div *ngFor="let work of workData; index as i">
+              <ion-row>
+                <ion-col>
+                  <ion-item style="--background: lightgrey;">
+                    <ion-label>{{i + 1}}.</ion-label>
+                    <ion-buttons slot="end">
+                      <ion-button fill="clear" color="danger" (click)="createAlert(work.company, i, 2)">
+                        <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+                      </ion-button>
+                    </ion-buttons>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+              
+              <ion-row>
+                <ion-col>
+                  <ion-item>
+                    <ion-label position="floating">Years of Experience</ion-label>
+                    <ion-input type="number" value="{{work.year}}" readonly></ion-input>
+                  </ion-item>    
+                </ion-col>
+              </ion-row>
+
+              <ion-row>
+                <ion-col>
+                  <ion-item>
+                    <ion-label position="floating">Organization / Comapny</ion-label>
+                    <ion-input type="text" value="{{work.company}}" readonly></ion-input>
+                  </ion-item>    
+                </ion-col>
+              </ion-row>
+
+              <ion-row>
+                <ion-col>
+                  <ion-item>
+                    <ion-label position="floating">Role</ion-label>
+                    <ion-input type="text" value="{{work.role}}" readonly></ion-input>
+                  </ion-item>    
+                </ion-col>
+              </ion-row>
+            </div>
+            
+            <div class="ion-text-center">
+              <br><br>
+              <ion-button (click)="createModal(4)" fill="outline" class="ion-margin-vertical">
+                <ion-icon slot="end" name="add"></ion-icon>Add
+              </ion-button>
+              <br><br>
+            </div>
+
+            <div class="ion-margin-vertical ion-text-center">
+              <ion-button color="danger" (click)="nextStep(3, 'back')" class="ion-margin-end">BACK<ion-icon name="arrow-back-outline" slot="start"></ion-icon></ion-button>
+              <ion-button color="primary" class="ion-margin-start" (click)="createAccount(formData1.value, formData2.value)">
+                Create Account</ion-button>
+              <p><br>You can add or update later.</p>
+            </div>
+          </div>
+
+        </ion-grid>
+
+      </div>
+    
+      </ion-card-content>
+      </ion-card>
+
+      </ion-col>
+
+    </ion-row>
+  </ion-grid>
+</ion-content>

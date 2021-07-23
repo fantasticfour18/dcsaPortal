@@ -1,0 +1,29 @@
+.head
+{
+    font-size: 12pt; 
+}
+
+.divider
+{
+    border-bottom: 1px solid grey !important;   
+}
+
+.my-label
+{
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.calendar
+{
+    border: none;
+    background-color: transparent;
+    text-align: right;
+    outline: none;
+}
+
+.cal-icon
+{
+    color: rgb(158, 0, 1340);
+}

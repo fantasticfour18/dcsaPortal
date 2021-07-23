@@ -1,0 +1,48 @@
+.divider
+{
+    border-bottom: 5px solid grey !important;   
+}
+
+.slider
+{
+    border-bottom: 1px solid grey !important;   
+}
+
+.swiper-image
+{
+    margin: auto;
+}
+
+.swiper-text
+{
+    font-size: 10pt;
+}
+
+.highlight
+{
+    background-color: rgba(130, 0, 37, 0.8); 
+    color: white
+}
+
+.example-header 
+{
+    display: flex;
+    align-items: center;
+    padding: 0.5em;
+}
+
+.example-header-label 
+{
+    flex: 1;
+    height: 1em;
+    font-weight: 500;
+    text-align: center;
+    margin-top: -10px;
+}
+
+.col-outline
+{
+    border: 1px solid green;
+    border-radius: 20px;
+}
+

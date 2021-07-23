@@ -1,0 +1,88 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>DCSA Portal</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col size-md="6" offset-md="3"> 
+
+        <ion-card>
+
+          <ion-avatar class="logo">
+            <img src="assets/images/login_logo.jpg" alt="">
+          </ion-avatar>
+
+          <ion-grid>
+            <ion-row>
+              <ion-col size="8">
+                <ion-card-header>
+                  <ion-card-title class="ion-text-left"><h2>Account Login</h2></ion-card-title>
+                </ion-card-header>
+              </ion-col>
+              <ion-col size="4">
+                <ion-card-header>
+                  <ion-card-title class="ion-text-right"><h2><ion-icon name="people" size="large"></ion-icon></h2></ion-card-title>
+                </ion-card-header>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+    
+          <ion-card-content>
+
+            <form [formGroup]="formData" (ngSubmit)="login_data(formData.value)">
+              <ion-item>
+                <ion-label>User Type</ion-label>
+                <ion-select placeholder="Select" formControlName="utype">
+                  <ion-select-option value="Student">Student</ion-select-option>
+                  <ion-select-option value="Teaching-Staff">Teaching Staff</ion-select-option>
+                  <ion-select-option value="Non-Teaching-Staff">Non-Teaching Staff</ion-select-option>
+                </ion-select>
+              </ion-item>
+
+              <ion-item>
+                <ion-label position="floating">Username or Email</ion-label>
+                <ion-input type="text" name="user_id" formControlName="email"></ion-input>
+                <ion-icon name="person-circle" slot="end" class="input-icon"></ion-icon>
+              </ion-item>
+              <ion-item *ngIf="!formData.get('email').valid && formData.get('email').touched" lines="none">
+                <ion-label color="danger">Please enter valid input.</ion-label>
+              </ion-item>
+              
+              <ion-item>
+                <ion-label position="floating">Password</ion-label>
+                <ion-input type="password" name="pass" formControlName="pass"></ion-input>
+                <ion-icon name="key" slot="end" class="input-icon"></ion-icon>
+              </ion-item>
+              <ion-item *ngIf="!formData.get('pass').valid && formData.get('pass').touched" lines="none">
+                <ion-label color="danger">Please enter password.</ion-label>
+              </ion-item>
+    
+              <div class="ion-margin-vertical ion-text-right">  
+                <a color="default" routerLink="/pass-reset">Forgot Password?</a>
+              </div>
+
+              <div class="ion-margin-vertical ion-text-center">  
+                <ion-button type="submit" color="primary" [disabled]="!formData.valid">LOGIN<ion-icon name="log-in" slot="end"></ion-icon></ion-button>
+              </div>
+
+              <div class="ion-margin-vertical ion-text-center">  
+                <a color="default" routerLink="/register">Don't have Account? Click here to Register</a>
+              </div>
+            </form>
+
+          </ion-card-content>
+        </ion-card>
+
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <div class="ion-text-center ion-margin-vertical">
+    <p>Copyright © 2020 DCSA Login Portal</p>
+  </div>
+
+</ion-content>

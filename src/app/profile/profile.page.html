@@ -1,0 +1,126 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Profile</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)" pullFactor="0.8" pullMin="60" pullMax="120">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col size-md="6" offset-md="3">
+
+      <div *ngIf="basic">
+        <ion-card>
+
+          <ion-avatar class="profile">
+            <img *ngIf="profile_pic == null; else image" src="assets/images/avatar.png" alt="">
+            <ng-template #image><img [src]="profile_pic" alt=""></ng-template>
+          </ion-avatar>
+
+          <ion-card-header class="ion-text-center">
+            <ion-card-title>{{basic.first_name + " " + basic.last_name | titlecase}}</ion-card-title>
+            <ion-card-subtitle>{{basic.user_type}}</ion-card-subtitle>
+            
+          </ion-card-header>
+
+        </ion-card>
+        
+        <div class="ion-text-center">
+          <br>
+          <ion-button expand="block" color="dark" fill="outline" (click)="edit_profile()">Edit Profile</ion-button>
+          <br>
+        </div>
+        
+        
+        <ion-list>
+          <ion-list-header class="list-header">Basic</ion-list-header>
+          
+          <ion-item>
+            <ion-label>Father's Name</ion-label>
+            <ion-label><p class="ion-text-right">{{basic.fathers_name}}</p></ion-label>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>Mother's Name</ion-label>
+            <ion-label><p class="ion-text-right">{{basic.mothers_name}}</p></ion-label>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>Birthday</ion-label>
+            <ion-label><p class="ion-text-right">{{basic.DOB | date}}</p></ion-label>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>Gender</ion-label>
+            <ion-label><p class="ion-text-right">{{basic.gender}}</p></ion-label>
+          </ion-item>
+
+          <br>
+          <ion-list-header class="list-header">Contact</ion-list-header>
+
+          <ion-item>
+            <ion-label>Address
+              <p>{{basic.address}}</p>
+              <p>{{basic.city + ", " + basic.zipcode}}</p>
+              <p>{{basic.state + ", " +basic.country}}</p>
+            </ion-label>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>Phone</ion-label>
+            <ion-label><p class="ion-text-right">{{basic.phone}}</p></ion-label>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>Email
+              <p>{{basic.email}}</p>
+            </ion-label>
+          </ion-item>        
+        </ion-list>
+      </div>
+
+          <br>
+          <ion-list-header *ngIf="edu" class="list-header">Education</ion-list-header>
+
+          <div *ngFor="let data of edu">
+            <ion-card>
+              <ion-card-header>
+                <ion-card-title>{{data.schl}}</ion-card-title>
+              </ion-card-header>
+
+              <ion-card-content>
+                <p>Year of Passing {{data.year}}</p>
+                <ion-label>{{data.qual}}</ion-label> 
+                <ion-label class="ion-float-right">Percentage {{data.marks}}%</ion-label>
+                <p>{{data.spec}}</p>
+              </ion-card-content>
+            </ion-card>
+          </div>
+
+          <br>
+          <ion-list-header *ngIf="work" class="list-header">Work</ion-list-header>
+
+          <div *ngFor="let data of work">
+            <ion-card>
+              <ion-card-header>
+                <ion-card-title>{{data.org}}</ion-card-title>
+              </ion-card-header>
+
+              <ion-card-content>
+                <p>{{data.role}}</p>
+                <p>{{data.years}} years of experience</p>
+              </ion-card-content>
+            </ion-card>
+          </div>
+
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

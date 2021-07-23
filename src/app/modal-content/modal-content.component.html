@@ -1,0 +1,223 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{title}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismissModal(null)"><ion-icon name="close"></ion-icon></ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <br><br>
+  <div [ngSwitch]="mode">
+    <div *ngSwitchCase="1">
+      <form [formGroup]="basic" (ngSubmit)="addData(basic.value)">
+        <ion-item>
+          <ion-label color="primary" position="floating">Father's Name</ion-label>
+          <ion-input type="text" formControlName="fath"></ion-input>
+        </ion-item>
+        <ion-item *ngIf="basic.get('fath').touched && !basic.get('fath').valid" lines="none">
+          <ion-label color="danger" class="ion-text-nowrap">Enter valid father's name.</ion-label>
+        </ion-item>
+
+        <ion-item>
+          <ion-label color="primary" position="floating">Mother's Name</ion-label>
+          <ion-input type="text" formControlName="moth"></ion-input>
+        </ion-item>
+        <ion-item *ngIf="basic.get('moth').touched && !basic.get('moth').valid" lines="none">
+          <ion-label color="danger" class="ion-text-nowrap">Enter valid mother's name.</ion-label>
+        </ion-item>
+
+        <ion-item>
+          <ion-label color="primary">D.O.B</ion-label>
+          <ion-datetime displayFormat="DD MMMM YYYY" placeholder="Select" formControlName="dob"></ion-datetime>
+        </ion-item>
+        <ion-item *ngIf="basic.get('dob').touched && !basic.get('dob').valid" lines="none">
+          <ion-label color="danger" class="ion-text-nowrap">Required.</ion-label>
+        </ion-item>
+
+        <ion-item>
+          <ion-label color="primary">Gender</ion-label>
+          <ion-select placeholder="Select" formControlName="gender">
+            <ion-select-option value="Male">Male</ion-select-option>
+            <ion-select-option value="Female">Female</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item *ngIf="basic.get('gender').touched && !basic.get('gender').valid" lines="none">
+          <ion-label color="danger" class="ion-text-nowrap">Required.</ion-label>
+        </ion-item>
+        <br><br>
+        <ion-button type="submit" expand="block" shape="round" class="ion-margin-vertical" [disabled]="!basic.valid">
+          SAVE</ion-button>
+      </form>
+    </div>
+
+    <div *ngSwitchCase="2">
+      <form [formGroup]="contact" (ngSubmit)="addData(contact.value)">
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <ion-item>
+                <ion-label color="primary" position="floating">Address</ion-label>
+                <ion-input type="text" formControlName="address"></ion-input>
+              </ion-item>
+              <ion-item *ngIf="contact.get('address').touched && !contact.get('address').valid" lines="none">
+                <ion-label color="danger" class="ion-text-wrap">Required.</ion-label>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col size="6">
+              <ion-item>
+                <ion-label color="primary" position="floating">City</ion-label>
+                <ion-input type="text" formControlName="city"></ion-input>
+              </ion-item>
+              <ion-item *ngIf="contact.get('city').touched && !contact.get('city').valid" lines="none">
+                <ion-label color="danger" class="ion-text-wrap">Enter valid city.</ion-label>
+              </ion-item>
+            </ion-col>
+
+            <ion-col size="6">
+              <ion-item>
+                <ion-label color="primary" position="floating">State</ion-label>
+                <ion-input type="text" formControlName="state"></ion-input>
+              </ion-item>
+              <ion-item *ngIf="contact.get('state').touched && !contact.get('state').valid" lines="none">
+                <ion-label color="danger" class="ion-text-wrap">Enter valid state.</ion-label>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col size="6">
+              <ion-item>
+                <ion-label color="primary" position="floating">Zip Code</ion-label>
+                <ion-input type="number" formControlName="zipcode" (keyup)="limitNumber(contact.value, 'zip')"></ion-input>
+              </ion-item>
+              <ion-item *ngIf="contact.get('zipcode').touched && !contact.get('zipcode').valid" lines="none">
+                <ion-label color="danger" class="ion-text-wrap">Enter valid zipcode.</ion-label>
+              </ion-item>
+            </ion-col>
+
+            <ion-col size="6">
+              <ion-item>
+                <ion-label color="primary" position="floating">Country</ion-label>
+                <ion-input type="text" formControlName="country"></ion-input>
+              </ion-item>
+              <ion-item *ngIf="contact.get('country').touched && !contact.get('country').valid" lines="none">
+                <ion-label color="danger" class="ion-text-wrap">Enter valid country.</ion-label>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col>
+              <ion-item>
+                <ion-label color="primary" position="floating">Phone</ion-label>
+                <ion-input type="number" formControlName="phone" (keyup)="limitNumber(contact.value, 'phone')"></ion-input>
+              </ion-item>
+              <ion-item *ngIf="contact.get('phone').touched && !contact.get('phone').valid" lines="none">
+                <ion-label color="danger">Enter valid phone number.</ion-label>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col>
+              <ion-item>
+                <ion-label color="primary" position="floating">Email</ion-label>
+                <ion-input type="email" formControlName="email"></ion-input>
+              </ion-item>
+              <ion-item *ngIf="contact.get('email').touched && !contact.get('email').valid" lines="none">
+                <ion-label color="danger">Enter valid email address.</ion-label>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+        <br><br>
+        <ion-button type="submit" expand="block" shape="round" class="ion-margin-vertical" [disabled]="!contact.valid">SAVE</ion-button>
+      </form>
+    </div>
+
+    <div *ngSwitchCase="3">
+      <form [formGroup]="eduForm" (ngSubmit)="addData(eduForm.value)">
+      <ion-item>
+        <ion-label color="primary">Year of Passing</ion-label>
+        <ion-datetime displayFormat="YYYY" pickerFormat="YYYY" placeholder="Select" formControlName="year"></ion-datetime>
+      </ion-item>
+      <ion-item *ngIf="eduForm.get('year').touched && !eduForm.get('year').valid" lines="none">
+        <ion-label color="danger">Required</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label color="primary">Qualification</ion-label>
+        <ion-select placeholder="Select" value="10th" formControlName="qual">
+          <ion-select-option value="10th">10th</ion-select-option>
+          <ion-select-option value="12th">12th</ion-select-option>
+          <ion-select-option value="Graduation">Graduation</ion-select-option>
+          <ion-select-option value="Post Graduation">Post Graduation</ion-select-option>
+          <ion-select-option value="Doctoral (PHD)">Doctoral (PHD)</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label color="primary" position="floating">Subjects / Specialization</ion-label>
+        <ion-input type="text" formControlName="sub"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label color="primary" position="floating">School / College</ion-label>
+        <ion-input type="text" formControlName="schl"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="eduForm.get('schl').touched && !eduForm.get('schl').valid" lines="none">
+        <ion-label color="danger">Required</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label color="primary" position="floating">CGPA / Marks</ion-label>
+        <ion-input type="number" formControlName="marks"></ion-input>
+      </ion-item>
+      <br><br>
+      <div *ngIf="deleteBtn" class="ion-text-center">
+        <ion-button color="danger" shape="outline" class="ion-margin-vertical" (click)="createAlert('delEdu')">
+          <ion-icon name="trash-outline" slot="start"></ion-icon>Delete
+        </ion-button>
+      </div>
+      <br><br><br>
+      <ion-button type="submit" expand="block" shape="round" class="ion-margin-vertical" [disabled]="!eduForm.valid">
+        SAVE</ion-button>
+      </form>
+    </div>
+
+    <div *ngSwitchCase="4">
+      <form [formGroup]="workForm" (ngSubmit)="addData(workForm.value)">
+      <ion-item>
+        <ion-label color="primary" position="floating">Years of Experience</ion-label>
+        <ion-input type="number" formControlName="year"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="workForm.get('year').touched && !workForm.get('year').valid" lines="none">
+        <ion-label color="danger">Required</ion-label>
+      </ion-item>
+
+      <ion-item>
+        <ion-label color="primary" position="floating">Organization / Company</ion-label>
+        <ion-input type="text" formControlName="company"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="workForm.get('company').touched && !workForm.get('company').valid" lines="none">
+        <ion-label color="danger">Required</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label color="primary" position="floating">Role</ion-label>
+        <ion-input type="text" formControlName="role"></ion-input>
+      </ion-item>
+      <br><br>
+      <div *ngIf="deleteBtn" class="ion-text-center">
+        <ion-button color="danger" shape="outline" class="ion-margin-vertical" (click)="createAlert('delWork')">
+          <ion-icon name="trash-outline" slot="start"></ion-icon>Delete
+        </ion-button>
+      </div>
+      <br><br><br>
+      <ion-button type="submit" expand="block" shape="round" class="ion-margin-vertical" [disabled]="!workForm.valid">
+        SAVE</ion-button>
+      </form>
+    </div>
+  </div>
+
+</ion-content>

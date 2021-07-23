@@ -1,0 +1,58 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Students</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="form" *ngIf="filter">
+    <ion-item>
+      <ion-label>Class</ion-label>
+      <ion-select placeholder="Select" formControlName="clss">
+        <ion-select-option *ngFor="let opt of clss" value={{opt}}>{{opt}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>Semester</ion-label>
+      <ion-select placeholder="Select" formControlName="sem">
+        <ion-select-option *ngFor="let sem of sems; index as i" value={{i+1}}>{{sem}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>Shift</ion-label>
+      <ion-select placeholder="Select" formControlName="shift">
+        <ion-select-option value="Morning">Morning</ion-select-option>
+        <ion-select-option value="Evening">Evening</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <br>
+    <div class="ion-text-center">
+      <ion-button (click)="filterResults('cancel')" color="danger" fill="outline" shape="round">Cancel</ion-button>
+      <ion-button (click)="filterResults(2)" color="tertiary" fill="outline" shape="round">Apply Changes</ion-button>
+    </div>
+  </form>
+  <ion-button *ngIf="filterBtn" (click)="filterResults(1)" expand="block" fill="outline" shape="round">
+    Filter Results <ion-icon name="filter" slot="end"></ion-icon></ion-button>
+
+  <br>
+  <div *ngIf="list != null; else noStudent">
+    <ion-item *ngFor="let li of list; index as i" (click)="showProfile(i)">
+      <ion-avatar slot="start">
+        <ng-container *ngIf="li.profile_photo !== ''; else image">
+          <img src="data:image/jpeg;base64,{{li.profile_photo}}">
+        </ng-container>
+        <ng-template #image><img src="assets/images/avatar.png" alt=""></ng-template>
+      </ion-avatar>
+      <ion-label>{{li.fname + " " + li.lname}}</ion-label>
+    </ion-item>
+  </div>
+
+  <ng-template #noStudent>
+    <br><br><br><ion-text color="danger" class="ion-text-center"><p>No students are available.</p></ion-text>
+  </ng-template>
+
+</ion-content>

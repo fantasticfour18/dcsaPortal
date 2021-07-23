@@ -1,0 +1,163 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start" *ngIf="mode == 2">
+      <ion-button (click)="close()">
+        <ion-icon slot="start" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Attendance</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col size-md="8" offset-md="2">
+
+        <ion-segment (ionChange)="segmentChanged($event)" value="mark">
+          <ion-segment-button value="mark">
+            <ion-label>Mark Attendance</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="report">
+            <ion-label>View Report</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+
+        <div [ngSwitch]="mode">
+          <form [formGroup]="form">
+          <div *ngSwitchCase='1' class="ion-margin-top">
+            
+            <div *ngIf="segment == 3; else attendance">
+              <ion-item>
+                <ion-label>Start Month</ion-label>
+                <ion-datetime display-format="MMM/YYYY" placeholder="Select" formControlName="s_date"></ion-datetime>
+              </ion-item>
+
+              <ion-item>
+                <ion-label>End Month</ion-label>
+                <ion-datetime display-format="MMM/YYYY" placeholder="Select" formControlName="e_date"></ion-datetime>
+              </ion-item>
+              <ion-item *ngIf="mon_check">
+                <ion-label color="danger" class="ion-text-wrap">
+                  Enter a valid month. Start month should be less than or equal to end month and year should match in both cases.</ion-label>
+              </ion-item>
+            </div>
+
+            <ng-template #attendance>
+              <ion-item>
+                <ion-label>Date</ion-label>
+                <input matInput [matDatepicker]="picker" class="calendar" readonly placeholder="mm/dd/yyyy"
+                formControlName="date" (ngModelChange)="parseDate($event)">
+                <mat-datepicker-toggle matSuffix [for]="picker" class="cal-icon"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </ion-item>
+            </ng-template>
+
+            <ion-item>
+              <ion-label>Class</ion-label>
+              <ion-select placeholder="Select" formControlName="clss" (ionChange)="fetch_data(form.value)">
+                <ion-select-option *ngFor="let opt of clss" value={{opt}}>{{opt}}</ion-select-option>
+              </ion-select>
+            </ion-item>
+
+            <ion-item>
+              <ion-label>Semester</ion-label>
+              <ion-select placeholder="Select" formControlName="sems" (ionChange)="fetch_data(form.value)">
+                <ion-select-option *ngFor="let sem of sems; index as i" value={{i+1}}>{{sem}}</ion-select-option>
+              </ion-select>
+            </ion-item>
+
+            <ion-item *ngIf="subs">
+              <ion-label>Subject</ion-label>
+              <ion-select placeholder="Select" formControlName="subs" interface="action-sheet" [interfaceOptions]="{header: 'Subject'}">
+                <ion-select-option *ngFor="let sub of subs; index as i" value={{sub}}>{{sub}}</ion-select-option>
+              </ion-select>
+            </ion-item>
+
+            <br>
+            <ion-list>
+              <ion-radio-group name="shift" value="Morning" mode="md" formControlName="shift">
+                <ion-list-header>
+                  <ion-label style="font-size: 15pt; font-weight: bold;">Shift</ion-label>
+                </ion-list-header>
+                <ion-item>
+                  <ion-label>Morning</ion-label>
+                  <ion-radio value="Morning" color="secondary"></ion-radio>
+                </ion-item>
+                <ion-item>
+                  <ion-label>Evening</ion-label>
+                  <ion-radio value="Evening" color="tertiary"></ion-radio>
+                </ion-item>
+              </ion-radio-group>
+            </ion-list>
+            <br><br><br>
+
+            <div *ngIf="segment == 0; else report_btn">
+              <ion-button (click)="viewList(form.value)" expand="block" shape="round" 
+              [disabled]="!form.get('date').valid || !form.get('clss').valid || !form.get('sems').valid || !form.get('subs').valid">
+                Next
+              </ion-button>
+            </div>
+            <ng-template #report_btn>
+              <ion-button (click)="viewList(form.value)" expand="block" shape="round" 
+              [disabled]="!form.get('s_date').valid || !form.get('e_date').valid || !form.get('clss').valid || 
+              !form.get('sems').valid || !form.get('subs').valid">
+                Generate Report
+              </ion-button>
+            </ng-template>   
+          </div>
+
+          <div *ngSwitchCase='2'>
+            <div *ngIf="list; else noStudent">
+              <br>
+              <ion-list> 
+                <ion-label class="head">{{form.get('clss').value + " " + "(Semester-" + form.get('sems').value + ")"}}</ion-label>
+                <ion-label class="ion-float-right head" color="medium">Morning</ion-label>
+                <br><br>
+                <ion-label color="medium">{{form.get('subs').value}}</ion-label>
+                <br><br>
+                <div class="divider"></div>
+                <div *ngIf="sel_btn">
+                  <div class="ion-float-right my-label">
+                    <ion-label color="primary" (click)="selAll()" button>{{selectAll}}</ion-label>
+                  </div>
+                  <br><br>
+                  <div class="divider"></div>
+                </div>
+
+                <br>
+                <ion-item *ngFor="let li of list; index as i">
+                  <ion-avatar slot="start">
+                    <ng-container *ngIf="li.photo !== ''; else image">
+                      <img src="data:image/jpeg;base64,{{li.photo}}">
+                    </ng-container>
+                    <ng-template #image><img src="assets/images/avatar.png" alt=""></ng-template>
+                  </ion-avatar>
+                  <ion-label>{{li.fname + " " + li.lname}}</ion-label>
+                  <ion-checkbox color="success" slot="end" (ionChange)="mark(1, i)" formControlName="marked"
+                  checked="{{li.mark}}" disabled="{{li.disable}}"></ion-checkbox>
+                </ion-item>
+              </ion-list>
+              <br><br><br>
+              <ion-button (click)="createAlert()" expand="block" shape="round" [disabled]="countMarked == 0">
+                Mark <ion-icon slot="end" name="checkmark"></ion-icon>
+              </ion-button>
+              <br>
+              <ion-text class="ion-text-center" color="warning"><p >Note: Unmarked students are treated as either absent or null.</p></ion-text>
+            </div>
+            <ng-template #noStudent>
+              <br><br><br><ion-text color="danger" class="ion-text-center"><p>No students are available.</p></ion-text>
+            </ng-template>
+          </div>
+        </form>
+        </div>
+
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  
+</ion-content>

@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Push Notifications</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+<br>
+<form [formGroup]="form">
+  <ion-list>
+    <ion-item>
+      <ion-label position="stacked" color="primary">Notification Title</ion-label>
+      <ion-input type="text" placeholder="Enter notification title" formControlName="title"></ion-input>
+    </ion-item>
+    <br>
+    <ion-item>
+      <ion-label position="stacked" color="primary">Message</ion-label>
+      <ion-textarea placeholder="Enter notification Message here..." rows="6" formControlName="msg"></ion-textarea>
+    </ion-item>
+  </ion-list>
+  <br>
+  <div class="ion-text-center">
+    <ion-button (click)="createAlert()" expand="block" color="danger" fill="outline" shape="round"
+    [disabled]="!form.get('title').valid || !form.get('msg').valid">Send Push Notification</ion-button>
+    <br><br>
+    <ion-text color="warning"><p>Note: Notification once sent cannot be undone.</p></ion-text>
+  </div>
+</form>
+</ion-content>

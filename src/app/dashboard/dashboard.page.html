@@ -1,0 +1,314 @@
+<ion-header>
+  <ion-toolbar>
+    <ng-container *ngIf="data">
+      <ion-buttons slot="start" *ngIf="(data.utype == 'Teaching-Staff' && mode == 1) || mode == 3">
+        <ion-button (click)="close()">
+          <ion-icon slot="start" name="arrow-back"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ng-container>
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Dashboard</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)" pullFactor="0.8" pullMin="60" pullMax="120">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  
+  <ion-grid>
+    <ion-row>
+      <ion-col class="ion-no-padding">
+        <div [ngSwitch]="mode"> 
+          <div *ngSwitchCase="1" class="ion-text-center">
+           <ion-text *ngIf="data.utype == 'Teaching-Staff'" color="primary">
+             <h3>{{tStats[1]['studs'][stud_index].fname + " " + tStats[1]['studs'][stud_index].lname}}</h3>
+             <div class="slider"></div>
+           </ion-text>
+           <br>
+           <label>Attendance by Subjects</label>
+            <br><br>
+            <canvas baseChart
+              [datasets]="datasets"
+              [labels]="labels"
+              [options]="chartOptions"
+              [colors]="chartColors"
+              [chartType]="cType">
+            </canvas>
+            <br><br>
+            <circle-progress
+                  [class]="'ion-text-center'" [percent]="overallPer" [radius]="60" [space]="-2" [backgroundPadding]="7"
+                  [outerStrokeWidth]="2" [outerStrokeGradient]="true" [outerStrokeGradientStopColor]="'#3bedd9'" [unitsColor]="'#05b09d'"
+                  [innerStrokeWidth]="2" [outerStrokeColor]="'#05b09d'" [innerStrokeColor]="'#e7e8ea'" [titleColor]="'#05b09d'"
+                  [animation]="true" [animationDuration]="300" [showSubtitle]="true" [subtitle]="['Overall', 'Attendance']" 
+                  [showUnits]="true" [titleFontSize]="20" [subtitleFontSize]="15" [unitsFontSize]="20" [clockwise]="true">
+            </circle-progress>
+            <circle-progress
+                  [class]="'ion-text-center'" [percent]="75" [radius]="60" [space]="-2" [backgroundPadding]="7" [unitsColor]="'#0bab09'"
+                  [outerStrokeWidth]="2" [outerStrokeGradient]="true" [outerStrokeGradientStopColor]="'#5cf25a'"
+                  [innerStrokeWidth]="2" [outerStrokeColor]="'#0bab09'" [innerStrokeColor]="'#e7e8ea'" [titleColor]="'#0bab09'"
+                  [animation]="true" [animationDuration]="300" [showSubtitle]="true" [subtitle]="['Target', 'Attendance', '>=']" 
+                  [showUnits]="true" [titleFontSize]="20" [subtitleFontSize]="15" [unitsFontSize]="20" [clockwise]="true">
+            </circle-progress>
+            <br><br>
+            <div class="divider"></div>
+
+            <div *ngFor="let sub of subDatasets; index as i">
+            <ng-container *ngIf="(data.utype == 'Teaching-Staff' && statsData[0]['sub' + (i + 1)] == form.get('sub').value) || 
+              data.utype == 'Student'">
+              <br><br>
+              <label>{{statsData[0]['sub' + (i + 1)] + ' (' + statsData[1]['sub_code' + (i + 1)] + ')'}}</label>
+              <br><br>
+              <canvas baseChart
+                [datasets]="sub.data"
+                [labels]="monLabels"
+                [options]="chartOptions"
+                [colors]="chartColors"
+                chartType="bar">
+              </canvas>
+              <br><br>
+              <ng-container *ngIf="statsData[3]['lec_count' + (i + 1)] != 0; else noLecture">
+                <div *ngIf="sub.percentage >= 75; else low">
+                  <circle-progress 
+                    [percent]="sub.percentage" [radius]="60" [space]="-2" [backgroundPadding]="7" [unitsColor]="'#05b09d'"
+                    [outerStrokeWidth]="2" [outerStrokeGradient]="true" [outerStrokeGradientStopColor]="'#3bedd9'" 
+                    [innerStrokeWidth]="2" [outerStrokeColor]="'#05b09d'" [innerStrokeColor]="'#e7e8ea'" [titleColor]="'#05b09d'"
+                    [animation]="true" [animationDuration]="300" [showSubtitle]="true" [subtitle]="['Overall', 'Attendance']" 
+                    [showUnits]="true" [titleFontSize]="20" [subtitleFontSize]="15" [unitsFontSize]="20" [clockwise]="true">
+                  </circle-progress>
+                  <circle-progress
+                    [percent]="datasets[0].data[i] / 60 * 100" [radius]="60" [space]="-2" [backgroundPadding]="7" [unitsColor]="'#c94f08'"
+                    [outerStrokeWidth]="2" [outerStrokeGradient]="true" [outerStrokeGradientStopColor]="'#ed742d'" 
+                    [innerStrokeWidth]="2" [outerStrokeColor]="'#c94f08'" [innerStrokeColor]="'#e7e8ea'" [titleColor]="'#c94f08'"
+                    [animation]="true" [animationDuration]="300" [showSubtitle]="true" [subtitle]="['Classes', 'Taken']" 
+                    [showUnits]="true" [titleFontSize]="20" [subtitleFontSize]="15" [unitsFontSize]="20" [clockwise]="true">
+                  </circle-progress>
+
+                  <br><br>
+                  <ion-chip color="tertiary" outline="true">
+                    <ion-label>Total lectures delivered: {{statsData[3]['lec_count' + (i + 1)]}}</ion-label>
+                  </ion-chip>
+                </div>
+              
+                <ng-template #low>
+                  <circle-progress
+                    [percent]="sub.percentage" [radius]="60" [space]="-2" [backgroundPadding]="7" [unitsColor]="'#c40c0c'"
+                    [outerStrokeWidth]="2" [outerStrokeGradient]="true" [outerStrokeGradientStopColor]="'#f22222'" 
+                    [innerStrokeWidth]="2" [outerStrokeColor]="'#c40c0c'" [innerStrokeColor]="'#e7e8ea'" [titleColor]="'#c40c0c'"
+                    [animation]="true" [animationDuration]="300" [showSubtitle]="true" [subtitle]="['Current', 'Attendance']" 
+                    [showUnits]="true" [titleFontSize]="20" [subtitleFontSize]="15" [unitsFontSize]="20" [clockwise]="true">
+                  </circle-progress>
+                  <br>
+                  <ion-chip color="tertiary" outline="true">
+                    <ion-label>Total lectures delivered: {{statsData[3]['lec_count' + (i + 1)]}}</ion-label>
+                  </ion-chip>
+                  <br>
+                  <ion-chip color="danger" outline="true">
+                    <ion-icon name="warning-outline" color="warning"></ion-icon>
+                    <ion-label>Your attendance is low</ion-label>
+                  </ion-chip>
+                  <ion-chip color="danger" outline="true">
+                    <ion-label>Number of lectures to be attended: {{sub.lecture_required}}</ion-label>
+                  </ion-chip>
+                  <br>
+                </ng-template>
+
+                <br>
+                <ion-button (click)="getDatesList(i)" fill="outline" shape="round" [disabled]="!datasets[0].data[i]">View Attendance Dates
+                  <ion-icon name="chevron-forward" slot="end"></ion-icon>
+                </ion-button>  
+              </ng-container>
+
+              <ng-template #noLecture>
+                <ion-chip color="secondary" outline="true">
+                  <ion-label>No lecture has been delivered till now.</ion-label>
+                </ion-chip>
+              </ng-template>
+              
+              <br><br>
+              <div class="divider"></div>
+            </ng-container>
+            </div>
+            <br>
+          </div>
+
+          <div *ngSwitchCase="2">
+            <form [formGroup]="form" *ngIf="filter">
+              <ion-row>
+                <ion-col size="6">
+                  <ion-item>
+                    <ion-label>Class</ion-label>
+                    <ion-select placeholder="Select" formControlName="clss" (ionChange)="fetch_sub(form.value)">
+                      <ion-select-option *ngFor="let opt of clss" value={{opt}}>{{opt}}</ion-select-option>
+                    </ion-select>
+                  </ion-item>
+                </ion-col>
+
+                <ion-col size="6">
+                  <ion-item>
+                    <ion-label>Semester</ion-label>
+                    <ion-select placeholder="Select" formControlName="sem" (ionChange)="fetch_sub(form.value)">
+                      <ion-select-option *ngFor="let sem of sems; index as i" value={{i+1}}>{{sem}}</ion-select-option>
+                    </ion-select>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+               
+              <ion-row>
+                <ion-col>
+                  <ion-item>
+                    <ion-label>Shift</ion-label>
+                    <ion-select placeholder="Select" formControlName="shift">
+                      <ion-select-option value="Morning">Morning</ion-select-option>
+                      <ion-select-option value="Evening">Evening</ion-select-option>
+                    </ion-select>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+
+              <ion-row *ngIf="subs">
+                <ion-col>
+                  <ion-item>
+                    <ion-label>Subject</ion-label>
+                    <ion-select placeholder="Select" formControlName="sub" interface="action-sheet" 
+                    [interfaceOptions]="{header: 'Subject'}">
+                      <ion-select-option *ngFor="let sub of subs;" value={{sub}}>{{sub}}</ion-select-option>
+                    </ion-select>
+                  </ion-item>
+                  <br>
+                </ion-col>
+              </ion-row>
+              <div class="ion-text-center">
+                <ion-button (click)="filterResults('cancel')" color="danger" fill="outline" shape="round">Cancel</ion-button>
+                <ion-button (click)="filterResults(2)" color="tertiary" fill="outline" shape="round">Apply Changes</ion-button>
+              </div>
+            </form>
+            <ion-button *ngIf="filterBtn" (click)="filterResults(1)" expand="block" fill="outline" shape="round">
+              Filter Results <ion-icon name="filter" slot="end"></ion-icon></ion-button>
+
+            <br>
+            <div *ngIf="tStats"> 
+              <ion-row class="ion-text-center">
+                <ion-col size="4" class="col-outline"><br>{{tStats[0].Male * 1 + tStats[0].Female * 1}}
+                  <br><ion-label color="medium" class="ion-margin-bottom">Total Students</ion-label><br><br></ion-col>
+                <ion-col size="4" class="col-outline"><br>{{tStats[0].Male}}
+                  <br><ion-label color="medium">Boys</ion-label></ion-col>
+                <ion-col size="4" class="col-outline"><br>{{tStats[0].Female}}
+                  <br><ion-label color="medium">Girls</ion-label></ion-col>
+              </ion-row>
+
+              <br>
+              <ion-text color="primary" class="ion-text-center">
+                <p>{{form.get('clss').value}} Semester - {{form.get('sem').value}} ({{form.get('shift').value}})</p>
+                <p style="font-size: 16pt; color: rgb(161, 6, 120);">{{form.get('sub').value}}</p>
+              </ion-text>
+
+              <div class="ion-text-center">
+                <circle-progress
+                    [percent]="tStats[2].lecture_count / 60 * 100" [radius]="100" [space]="-10"
+                    [outerStrokeWidth]="10" [outerStrokeGradient]="true" [outerStrokeGradientStopColor]="'#f572ef'"
+                    [innerStrokeWidth]="10" [outerStrokeColor]="'#bb15ae'" [innerStrokeColor]="'#e7e8ea'"
+                    [animation]="true" [animationDuration]="300" [showSubtitle]="true" [subtitle]="'Course Progress'" 
+                    [showUnits]="true" [titleFontSize]="30" [subtitleFontSize]="15" [unitsFontSize]="30" [clockwise]="true">
+                </circle-progress>
+              </div>
+              <br>
+              <div class="slider"></div>
+              <br>
+
+              <ion-text class="ion-text-center"><h3>All Course Stats</h3></ion-text>
+              <br>
+              <canvas baseChart
+              [datasets]="tDatasets['data1']"
+              [labels]="tDatasets['label1']"
+              [options]="tDatasets['options']"
+              [colors]="tDatasets['colors']"
+              [chartType]="cType">
+              </canvas>
+              <br><br>
+              <ion-text class="ion-text-center"><h3>Current Course Stats</h3></ion-text>
+              <br>
+              <canvas baseChart
+              [datasets]="tDatasets['data2']"
+              [labels]="tDatasets['label2']"
+              [options]="tDatasets['options']"
+              [colors]="tDatasets['colors']"
+              [chartType]="cType">
+              </canvas>
+
+              <br><br>
+              <div *ngIf="tStats[2].lecture_count != 0">
+                <ion-label><p>Low Attendance</p></ion-label>
+                <div class="slider ion-margin-bottom"></div>
+                <swiper class="swiper-container" [config]="Swiper_Op">
+                  <div class="swiper-wrapper">
+                    <div *ngFor="let studs of tStats[1].studs; index as i" class="swiper-slide ion-text-center">
+                      <ng-container *ngIf="tStats[1].studs[i]['att_count'] < 75">
+                        <span (click)="fetchData('student_stats', i, 1)">
+                          <ion-avatar class="swiper-image">
+                            <img *ngIf="studs.photo !== ''; else avatar" src="data:image/jpeg;base64,{{studs.photo}}">
+                            <ng-template #avatar><img src="assets/images/avatar.png" /></ng-template>
+                          </ion-avatar>
+                          <br>
+                          <ion-label class="swiper-text">{{studs.fname}} 
+                            <ion-text color="danger"><p>{{tStats[1].studs[i]['att_count']}}%</p></ion-text>
+                          </ion-label>
+                        </span>
+                      </ng-container> 
+                    </div>
+                  </div>
+                </swiper>
+                <div class="slider ion-margin-top"></div>
+              </div>
+          
+              <br><br>
+              <ion-label><p>All Students Target Attendance</p></ion-label>
+              <div class="slider"></div>
+              <div *ngFor="let studs of tStats[1].studs; index as i">
+                <ng-container *ngIf="tStats[1].studs[i]['att_count'] >= 75">
+                  <ion-item (click)="fetchData('student_stats', i, 1)">
+                    <ion-avatar slot="start">
+                      <img *ngIf="studs.photo !== ''; else avatar" src="data:image/jpeg;base64,{{studs.photo}}">
+                      <ng-template #avatar><img src="assets/images/avatar.png" /></ng-template>
+                    </ion-avatar>
+                    <ion-label>{{studs.fname}}</ion-label>
+                    <div class="ion-float-right">
+                      <ion-label color="success">{{tStats[1].studs[i]['att_count']}}%</ion-label>
+                    </div>
+                  </ion-item>
+                </ng-container>
+              </div>
+            </div>
+            
+            
+            
+             
+          </div>
+
+          <div *ngSwitchCase="3" class="ion-text-center">
+            <ion-label *ngIf="noAttend" color="danger">
+              You have not attended any classes for this subject till now. Please attend the classes to get attendance.   
+            </ion-label>
+
+            <ion-chip color="light" outline="true" class="highlight">
+              <ion-icon name="pin"></ion-icon>
+              <ion-label>Highlighted dates indicates present attendance dates.</ion-label>
+            </ion-chip>
+            <br><br>
+            <div *ngFor="let mon of startDates; index as i"> 
+              <mat-card>
+                <mat-calendar [minDate]="startDates[i]" [maxDate]="endDates[i]" [dateClass]="dateCSS" 
+                [dateFilter]="disableSat"  [headerComponent]="calheadercomp"></mat-calendar>
+              </mat-card>
+              <br>
+            </div>
+          </div>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+ 
+</ion-content>

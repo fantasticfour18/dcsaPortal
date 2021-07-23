@@ -1,0 +1,7 @@
+{
+  "name": "Stud_Analytics",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}

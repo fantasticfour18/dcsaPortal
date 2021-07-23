@@ -1,0 +1,117 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="./home/tabs/profile" text="">
+      </ion-back-button>
+    </ion-buttons>
+    <ion-title>Edit Profile</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col size-md="6" offset-md="3">
+        <ion-card>
+          
+          <ion-card-header>
+            <ion-card-title class="card-header">Profile Picture</ion-card-title>
+          </ion-card-header>
+
+          <ion-avatar class="profile" (click)="showAction()">
+            <img *ngIf="profile_pic == null; else image" src="assets/images/avatar.png" alt="">
+            <ng-template #image><img [src]="profile_pic" alt=""></ng-template>
+          </ion-avatar>
+
+          <ion-card-header class="ion-text-center">
+            <ion-button (click)="showAction()" fill="clear" color="tertiary">
+             <ion-icon slot="icon-only" name="camera" class="profile-button"></ion-icon>
+            </ion-button>
+          </ion-card-header>
+
+        </ion-card>
+
+        <ion-card (click)="edit_profile(1, 0)">
+          <ion-card-header>
+            <ion-card-title class="card-header">Basic Info</ion-card-title>
+          </ion-card-header>
+
+        <ion-card-content>
+          <p>Edit birthday, gender, father's name and mother's name</p>
+        </ion-card-content>
+        </ion-card>
+
+        <ion-card (click)="edit_profile(2, 0)">
+          <ion-card-header>
+            <ion-card-title class="card-header">Contact Info</ion-card-title>
+          </ion-card-header>
+        
+        <ion-card-content>
+          <p>Edit address, phone and email</p>
+        </ion-card-content>
+        </ion-card>
+        <br>
+        <ion-card>
+
+          <ion-card-header>
+            <ion-card-title class="card-header">Education</ion-card-title>
+            <p *ngIf="edu">Click one of the items below to edit.</p>
+          </ion-card-header>
+
+          <div class="ion-text-center">
+            <ion-button (click)="edit_profile(3, 'add')" fill="clear" class="ion-margin-vertical">
+              <ion-icon slot="start" name="school-outline"></ion-icon>Add Education
+            </ion-button>
+          </div>
+
+          <div *ngFor="let data of edu; index as i">
+            <ion-card (click)="edit_profile(3, i)">
+              <ion-card-header>
+                <ion-card-title>{{data.schl}} <ion-icon class="ion-float-right" name="pencil"></ion-icon></ion-card-title>
+              </ion-card-header>
+
+              <ion-card-content>
+                <p>Year of Passing {{data.year}}</p>
+                <ion-label>{{data.qual}}</ion-label> 
+                <ion-label class="ion-float-right">Percentage {{data.marks}}%</ion-label>
+                <p>{{data.spec}}</p>
+              </ion-card-content>
+            </ion-card>
+          </div>
+
+        </ion-card>
+        <br>
+        <ion-card>
+
+          <ion-card-header>
+            <ion-card-title class="card-header">Work</ion-card-title>
+            <p *ngIf="work">Click one of the items below to edit.</p>
+          </ion-card-header>
+
+          <div class="ion-text-center">
+            <ion-button (click)="edit_profile(4, 'add')" fill="clear" class="ion-margin-vertical">
+              <ion-icon slot="start" name="briefcase-outline"></ion-icon>Add Work
+            </ion-button>
+          </div>
+
+          <div *ngFor="let data of work; index as i">
+            <ion-card (click)="edit_profile(4, i)">
+              <ion-card-header>
+                <ion-card-title>{{data.org}} <ion-icon class="ion-float-right" name="pencil"></ion-icon></ion-card-title>
+              </ion-card-header>
+
+              <ion-card-content>
+                <p>{{data.role}}</p>
+                <p>{{data.years}} years of experience</p>
+              </ion-card-content>
+            </ion-card>
+          </div>
+
+        </ion-card> 
+
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>

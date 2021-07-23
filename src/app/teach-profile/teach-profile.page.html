@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Faculty & Staff</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <br>
+  <ion-item *ngFor="let li of list; index as i" (click)="showProfile(i)">
+    <ion-avatar slot="start">
+      <ng-container *ngIf="li.profile_photo !== ''; else image">
+        <img src="data:image/jpeg;base64,{{li.profile_photo}}">
+      </ng-container>
+      <ng-template #image><img src="assets/images/avatar.png" alt=""></ng-template>
+    </ion-avatar>
+    <ion-label>{{li.fname + " " + li.lname}}</ion-label>
+  </ion-item>
+</ion-content>
